@@ -3,11 +3,12 @@ clear all; close all; format short
 %
 %==========================================================================
 %
-% Simplified Semtner model 
+% Two layer model for ice salinity.
 %
+% I use a simplified Semtner model
 % Two state variables: Tsu and h
 %
-% Dec 2021 pour Clem
+% MV, Dec 2021 for Giulia
 %
 %
 %==========================================================================
@@ -22,7 +23,7 @@ i_scheme = 1      % Salinity scheme; '1' - SI3 empirical scheme (exponential-bas
 
 % numerical parameters
 dt    = 86400.    % Time step
-N_y   = 2.        % Number of years
+N_y   = 50.        % Number of years
 Nl     = 5;       % Number of layers
 
 h_min = 0.1       % Minimum thickness
@@ -109,7 +110,7 @@ for i_time = 2:N_ts
     Q_net(i_time)    = Q_atm(i_time) - epsilon * ( A + B*(T_su(i_time) - Kelvin) );
     
     dh_dt(i_time)    = - 1/(rho*L) * ( Q_net(i_time) + Q_w );
-    h_i(i_time)      = max([ h_i(i_time-1) + dh_dt(i_time) * 86400. h_min ]);
+    h_i(i_time)      = max([ h_i(i_time-1) + dh_dt(i_time) * dt h_min ]);
     
     % Diags
     Q_c(i_time)      = k_h * ( T_su(i_time) - T_b ); % diag
